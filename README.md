@@ -26,4 +26,34 @@
 
 ---
 
+## 🔧 How to Use (Load Unpacked in Chrome)
 
+Since Focus Bubble isn’t published on the Chrome Web Store yet, you can run it manually via Developer Mode:
+
+1. **Clone or download** this repository
+2. **Open Chrome** and navigate to:  chrome://extensions/
+3. **Enable Developer Mode** (top right switch)
+4. Click **Load Unpacked**
+5. Select the extracted project folder
+6. Focus Bubble is now installed! 🎉 You’ll see the icon in your browser toolbar.
+
+---
+
+## 📹 Demo
+
+▶️(https://www.linkedin.com/posts/vivekvardhan-reddy_focusbubble-productivitytools-chromeextension-activity-7324841181895413760-cCT2?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEEWMHcBas-iYEybY_ruuoLdRS6Iq2fOY3w) 
+
+
+---
+
+## 🧪 Tech Stack
+
+- HTML, CSS, JavaScript
+- Chrome Extension APIs
+- LocalStorage (for storing settings & session data)
+
+---
+
+### 💡 Stay focused. Stay productive.  
+**Focus Bubble** – Where work gets done, and distractions are kept at bay.
+ 
