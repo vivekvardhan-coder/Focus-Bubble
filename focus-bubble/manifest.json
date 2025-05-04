@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Bubble",
+  "version": "1.0",
+  "description": "Block distracting websites and stay focused with meme overlays",
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "activeTab",
+    "notifications"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_title": "Focus Bubble"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+ "web_accessible_resources": [
+  {
+    "resources": ["memes/*.gif"],
+    "matches": ["<all_urls>"]
+  }
+],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Bubble</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --text-primary: #1f2937;
+      --text-secondary: #4b5563;
+      --bg-main: #f9fafb;
+      --bg-card: #ffffff;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --transition: all 0.2s ease;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 340px;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+    }
+
+    .header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .header-icon {
+      height: 24px;
+      width: 24px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      transition: var(--transition);
+    }
+
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat {
+      text-align: center;
+      flex: 1;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .stat:first-child::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background-color: #e5e7eb;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .sites-container {
+      margin-bottom: 12px;
+    }
+
+    .site-input {
+      display: flex;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .site-input input {
+      flex: 1;
+      margin-right: 8px;
+    }
+
+    .btn-icon {
+      background-color: transparent;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-secondary);
+    }
+
+    .btn-icon:hover {
+      background-color: #f3f4f6;
+      color: var(--text-primary);
+    }
+
+    .btn-icon.remove {
+      color: var(--danger);
+    }
+
+    .btn-icon.remove:hover {
+      background-color: #fee2e2;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      background-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background-color: #f3f4f6;
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: #e5e7eb;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger-hover);
+    }
+
+    .timer {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin: 16px 0;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-container {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      background-color: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .timer-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: var(--primary);
+      width: 0%;
+      transition: width 1s linear;
+    }
+
+    .sites-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sites-list li {
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      background-color: #f3f4f6;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sites-list li i {
+      margin-right: 8px;
+      color: var(--danger);
+    }
+
+    .add-site-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .success-icon {
+      font-size: 36px;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .completed-message {
+      text-align: center;
+      padding: 24px 12px;
+    }
+
+    .completed-message p {
+      margin-bottom: 24px;
+      color: var(--text-secondary);
+    }
+
+    .animated-icon {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.3s ease-out;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .error-message {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .quick-start-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .quick-start-btn {
+      flex: 1;
+      padding: 8px;
+      background-color: #f3f4f6;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .quick-start-btn:hover {
+      background-color: #e5e7eb;
+    }
+
+    .common-sites {
+      margin-bottom: 16px;
+    }
+
+    .common-site-category {
+      padding: 6px 12px;
+      background-color: #f3f4f6;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      transition: var(--transition);
+    }
+
+    .common-site-category:hover {
+      background-color: #e5e7eb;
+    }
+
+    .site-suggestion {
+      background-color: #f3f4f6;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .site-suggestion p {
+      margin: 0 0 8px 0;
+      color: var(--text-secondary);
+    }
+
+    .suggestion-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: var(--transition);
+    }
+
+    .btn-small:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .bronze-streak {
+      color: #cd7f32 !important;
+    }
+
+    .silver-streak {
+      color: #c0c0c0 !important;
+    }
+
+    .gold-streak {
+      color: #ffd700 !important;
+    }
+
+    .platinum-streak {
+      color: #e5e4e2 !important;
+    }
+
+    .diamond-streak {
+      color: #b9f2ff !important;
+    }
+
+    #timer-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-title">
+      <img src="icon48.png" class="header-icon" alt="Focus Bubble">
+      Focus Bubble
+    </div>
+  </div>
+  
+  <div class="container">
+    <div id="stats-section" class="card fade-in">
+      <div class="stats">
+        <div class="stat">
+          <div id="streak-count" class="stat-value">0</div>
+          <div class="stat-label">Streak</div>
+        </div>
+        <div class="stat">
+          <div id="total-time" class="stat-value">0</div>
+          <div class="stat-label">Hours Focused</div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="setup-session" class="fade-in">
+      <div class="card">
+        <div class="card-title">Set Focus Session</div>
+        
+        <div class="input-group">
+          <label class="input-label" for="duration">Duration (minutes)</label>
+          <input type="number" id="duration" min="1" max="180" value="25">
+          <div id="quick-start-buttons" class="quick-start-buttons"></div>
+        </div>
+        
+        <div class="card-title">Blocked Sites</div>
+        <div id="common-sites" class="common-sites"></div>
+        <div id="sites-container" class="sites-container">
+          <div class="site-input">
+            <input type="text" class="site-url" placeholder="e.g. youtube.com">
+            <button class="btn-icon remove remove-site-btn"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>
+        
+        <button id="add-site-btn" class="btn btn-secondary add-site-btn">
+          <i class="fas fa-plus"></i> Add Site
+        </button>
+        
+        <button id="start-btn" class="btn">
+          <i class="fas fa-play"></i> Start Focus Session
+        </button>
+      </div>
+    </div>
+    
+    <div id="active-session" class="fade-in" style="display: none;">
+      <div class="card">
+        <div class="card-title">Focus Session Active</div>
+        
+        <div class="timer" id="countdown">25:00</div>
+        <div class="timer-container">
+          <div id="timer-progress" class="timer-progress"></div>
+        </div>
+        
+        <div class="card-title">Blocked Sites:</div>
+        <ul id="blocked-sites-list" class="sites-list"></ul>
+        
+        <button id="cancel-btn" class="btn btn-danger">
+          <i class="fas fa-times"></i> Cancel Session
+        </button>
+      </div>
+    </div>
+    
+    <div id="completed-message" class="fade-in" style="display: none;">
+      <div class="card">
+        <div class="completed-message">
+          <i class="fas fa-check-circle success-icon animated-icon"></i>
+          <div class="card-title">Session Completed!</div>
+          <p>Great job staying focused! Your streak has increased.</p>
+          <button id="new-session-btn" class="btn">
+            <i class="fas fa-plus"></i> Start New Session
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
